@@ -149,6 +149,10 @@ int sc_enum_apps(sc_card_t *card)
 	r = sc_select_file(card, &path, &card->ef_dir);
 	LOG_TEST_RET(ctx, r, "Cannot select EF.DIR file");
 
+	if (card->ef_dir == NULL) {
+		LOG_TEST_RET(ctx, SC_ERROR_INVALID_CARD, "EF(DIR) nonexistant.");
+	}
+
 	if (card->ef_dir->type != SC_FILE_TYPE_WORKING_EF) {
 		sc_file_free(card->ef_dir);
 		card->ef_dir = NULL;

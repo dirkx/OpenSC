@@ -1044,6 +1044,10 @@ sc_pkcs15_bind_internal(struct sc_pkcs15_card *p15card, struct sc_aid *aid)
 			sc_log(ctx, "Cannot make absolute path to EF(ODF); error:%i", err);
 			goto end;
 		}
+		if (p15card->file_odf == NULL) {
+			sc_log(ctx, "After making absolute path to EF(ODF) still no odf.");
+			goto end;
+		}
 		sc_log(ctx, "absolute path to EF(ODF) %s", sc_print_path(&tmppath));
 		err = sc_select_file(card, &tmppath, &p15card->file_odf);
 	}
@@ -1058,6 +1062,8 @@ sc_pkcs15_bind_internal(struct sc_pkcs15_card *p15card, struct sc_aid *aid)
 		sc_log(ctx, "EF(ODF) not found in '%s'", sc_print_path(&tmppath));
 		goto end;
 	}
+
+	assert(p15card->file_odf);
 
 	len = p15card->file_odf->size;
 	if (!len) {
